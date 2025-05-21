@@ -2,37 +2,34 @@
 <html>
   <head>
     <title>URL Shortener Microservice</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <div class="container text-center">
-      <h1>URL Shortener Microservice</h1>
-      <h3>Short URL Creation</h3>
+    <h1>URL Shortener Microservice</h1>
+    <h2>Short URL Creation</h2>
 
-      <p>
-        Example: <code>POST [project_url]/api/shorturl - https://www.google.com</code>
-      </p>
+    <p>
+      Example:
+      <code>POST [project_url]/api/shorturl - https://www.google.com</code>
+    </p>
 
-      <div class="url-shortener">
-        <form action="/api/shorturl" method="POST" class="form-inline">
-          <div class="form-group">
-            <label for="url_input">URL:</label>
-            <input type="text" class="form-control" id="url_input" name="url" placeholder="https://www.freecodecamp.org/">
-          </div>
-          <button type="submit" class="btn btn-primary">POST URL</button>
+    <div class="box">
+      <fieldset>
+        <legend>URL Shortener</legend>
+        <form action="/api/shorturl" method="POST">
+          <label for="url_input">URL:</label>
+          <input id="url_input" type="text" name="url" value="https://www.freecodecamp.org/" required />
+          <button type="submit">POST URL</button>
         </form>
-      </div>
-
-      <div class="example">
-        <h3>Example Usage:</h3>
-        <p>
-          <a href="#">[this_project_url]/api/shorturl/3</a>
-        </p>
-        <h3>Will Redirect to:</h3>
-        <p>https://forum.freecodecamp.org/</p>
-        <p>By <a href="https://www.freecodecamp.org" target="_blank">freeCodeCamp</a></p>
-      </div>
+      </fieldset>
     </div>
+
+    <h3>Example Usage:</h3>
+    <p><a href="/api/shorturl/3">[this_project_url]/api/shorturl/3</a></p>
+
+    <h3>Will Redirect to:</h3>
+    <p>https://forum.freecodecamp.org/</p>
+
+    <p>By <a href="https://www.freecodecamp.org">freeCodeCamp</a></p>
   </body>
 </html>

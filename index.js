@@ -2,36 +2,29 @@ const express = require("express");
 const cors = require("cors");
 const dns = require("dns");
 const bodyParser = require("body-parser");
-const urlParser = require("url");
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.static("public"));
 
-// Memory store untuk URL shortener (sementara)
 let urlDatabase = {};
 let counter = 1;
 
-// Home Page
+// Home page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-// POST Endpoint untuk membuat short URL
+// POST endpoint buat shorten URL
 app.post("/api/shorturl", (req, res) => {
   const originalUrl = req.body.url;
 
-  // Cek format URL valid
+  // Validasi URL
   try {
-    const parsedUrl = urlParser.parse(originalUrl);
-    if (!parsedUrl.hostname) {
-      return res.json({ error: "invalid url" });
-    }
-
-    // Validasi DNS lookup
+    const parsedUrl = new URL(originalUrl);
     dns.lookup(parsedUrl.hostname, (err) => {
       if (err) {
         return res.json({ error: "invalid url" });
@@ -44,16 +37,15 @@ app.post("/api/shorturl", (req, res) => {
         });
       }
     });
-  } catch (error) {
+  } catch (e) {
     res.json({ error: "invalid url" });
   }
 });
 
-// Redirect dari short URL ke original URL
+// Redirect ke original URL
 app.get("/api/shorturl/:shortUrl", (req, res) => {
   const shortUrl = req.params.shortUrl;
   const originalUrl = urlDatabase[shortUrl];
-
   if (originalUrl) {
     res.redirect(originalUrl);
   } else {
@@ -61,8 +53,7 @@ app.get("/api/shorturl/:shortUrl", (req, res) => {
   }
 });
 
-// Start Server (port ambil dari env atau default 3000)
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`App is listening on port ${port}`);
+// Start server
+const listener = app.listen(process.env.PORT || 3001, () => {
+  console.log("App is listening on port " + listener.address().port);
 });
