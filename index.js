@@ -1,24 +1,68 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
+const dns = require("dns");
+const bodyParser = require("body-parser");
+const urlParser = require("url");
+
 const app = express();
 
-// Basic Configuration
-const port = process.env.PORT || 3000;
-
+// Middleware
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static("public"));
 
-app.use('/public', express.static(`${process.cwd()}/public`));
+// Memory store untuk URL shortener (sementara)
+let urlDatabase = {};
+let counter = 1;
 
-app.get('/', function(req, res) {
-  res.sendFile(process.cwd() + '/views/index.html');
+// Home Page
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/views/index.html");
 });
 
-// Your first API endpoint
-app.get('/api/hello', function(req, res) {
-  res.json({ greeting: 'hello API' });
+// POST Endpoint untuk membuat short URL
+app.post("/api/shorturl", (req, res) => {
+  const originalUrl = req.body.url;
+
+  // Cek format URL valid
+  try {
+    const parsedUrl = urlParser.parse(originalUrl);
+    if (!parsedUrl.hostname) {
+      return res.json({ error: "invalid url" });
+    }
+
+    // Validasi DNS lookup
+    dns.lookup(parsedUrl.hostname, (err) => {
+      if (err) {
+        return res.json({ error: "invalid url" });
+      } else {
+        const shortUrl = counter++;
+        urlDatabase[shortUrl] = originalUrl;
+        res.json({
+          original_url: originalUrl,
+          short_url: shortUrl,
+        });
+      }
+    });
+  } catch (error) {
+    res.json({ error: "invalid url" });
+  }
 });
 
-app.listen(port, function() {
-  console.log(`Listening on port ${port}`);
+// Redirect dari short URL ke original URL
+app.get("/api/shorturl/:shortUrl", (req, res) => {
+  const shortUrl = req.params.shortUrl;
+  const originalUrl = urlDatabase[shortUrl];
+
+  if (originalUrl) {
+    res.redirect(originalUrl);
+  } else {
+    res.json({ error: "No short URL found for given input" });
+  }
+});
+
+// Start Server (port ambil dari env atau default 3000)
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
+  console.log(`App is listening on port ${port}`);
 });

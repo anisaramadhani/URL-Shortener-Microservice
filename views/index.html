@@ -1,32 +1,38 @@
 <!DOCTYPE html>
-
 <html>
   <head>
-    <title>URL Shortener Microservice | freeCodeCamp.org</title>
-    <link
-      rel="icon"
-      type="image/png"
-      href="https://cdn.freecodecamp.org/universal/favicons/favicon-16x16.png"
-    />
-    <link href="/public/style.css" rel="stylesheet" type="text/css" />
+    <title>URL Shortener Microservice</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
   </head>
-
   <body>
-    <h1>URL Shortener Microservice</h1>
-    <main>
-      <section>
-        <form action="api/shorturl" method="POST">
-          <fieldset>
-            <legend>URL Shortener</legend>
+    <div class="container text-center">
+      <h1>URL Shortener Microservice</h1>
+      <h3>Short URL Creation</h3>
+
+      <p>
+        Example: <code>POST [project_url]/api/shorturl - https://www.google.com</code>
+      </p>
+
+      <div class="url-shortener">
+        <form action="/api/shorturl" method="POST" class="form-inline">
+          <div class="form-group">
             <label for="url_input">URL:</label>
-            <input id="url_input" type="text" name="url" placeholder="https://www.freecodecamp.org/" />
-            <input type="submit" value="POST URL" />
-          </fieldset>
+            <input type="text" class="form-control" id="url_input" name="url" placeholder="https://www.freecodecamp.org/">
+          </div>
+          <button type="submit" class="btn btn-primary">POST URL</button>
         </form>
-      </section>
-    </main>
-    <footer>
-      <p>By <a href="https://www.freecodecamp.org/">freeCodeCamp</a></p>
-    </footer>
+      </div>
+
+      <div class="example">
+        <h3>Example Usage:</h3>
+        <p>
+          <a href="#">[this_project_url]/api/shorturl/3</a>
+        </p>
+        <h3>Will Redirect to:</h3>
+        <p>https://forum.freecodecamp.org/</p>
+        <p>By <a href="https://www.freecodecamp.org" target="_blank">freeCodeCamp</a></p>
+      </div>
+    </div>
   </body>
 </html>
